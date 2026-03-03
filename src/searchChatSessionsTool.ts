@@ -3,6 +3,7 @@ import * as os from 'os';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { ChatDatabase } from './database';
+import { Indexer } from './indexer';
 import { relativeTime } from './utils';
 
 interface SearchToolInput {
@@ -21,7 +22,10 @@ interface SearchToolInput {
 export class SearchChatSessionsTool
   implements vscode.LanguageModelTool<SearchToolInput>
 {
-  constructor(private readonly db: ChatDatabase) {}
+  constructor(
+    private readonly db: ChatDatabase,
+    private readonly indexer: Indexer,
+  ) {}
 
   private normalizeWorkspaceId(value: vscode.Uri | string): string {
     if (typeof value !== 'string') {
@@ -66,6 +70,9 @@ export class SearchChatSessionsTool
     options: vscode.LanguageModelToolInvocationOptions<SearchToolInput>,
   ): Promise<vscode.LanguageModelToolResult> {
     const { query, sql, describe, scope, daysBack } = options.input;
+
+    // Ensure index is up-to-date before querying (coalesces with any in-flight reindex)
+    await this.indexer.reindex();
 
     // --- Describe: return schema overview ---
     if (describe) {

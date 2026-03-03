@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.5] - 2026-03-03
+
+### Added
+- Windows ARM64 (`win32-arm64`) platform support in build and release workflows (#4, thanks @rs38)
+
+### Changed
+- Session tree view is now hidden by default; users can enable it from the Views menu or command palette
+- Language model tool (`#searchChatSessions`) now triggers an incremental reindex before each query, ensuring agents always query up-to-date data
+
 ## [0.0.4] - 2026-02-25
 
 ### Fixed

@@ -105,7 +105,7 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.window.withProgress({ location: { viewId: 'sessionTrace.jsonlSessions' } }, () => indexDone).then(undefined, () => {});
 
   // --- LM tool for agent search ---
-  const searchTool = new SearchChatSessionsTool(db);
+  const searchTool = new SearchChatSessionsTool(db, indexer);
   context.subscriptions.push(
     vscode.lm.registerTool(
       'sessionTrace_searchConversations',
